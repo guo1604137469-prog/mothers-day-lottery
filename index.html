@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>母亲节幸运抽奖</title>
+<style>
+body{
+margin:0;
+font-family:"Microsoft YaHei",sans-serif;
+background:linear-gradient(135deg,#ffe08f,#fff6d5);
+padding:20px;
+}
+.card{
+max-width:900px;
+margin:auto;
+background:#fff;
+border-radius:30px;
+padding:30px;
+border:5px solid #ffb100;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+h1{
+text-align:center;
+color:#ff4f8b;
+}
+.subtitle{
+text-align:center;
+color:#666;
+margin-bottom:20px;
+}
+select,input,button{
+width:100%;
+padding:14px;
+margin-top:14px;
+border-radius:16px;
+border:2px solid #ffd0df;
+font-size:16px;
+box-sizing:border-box;
+}
+button{
+background:#ff5c96;
+color:white;
+font-weight:bold;
+cursor:pointer;
+border:none;
+}
+canvas{
+display:block;
+margin:20px auto;
+max-width:100%;
+}
+.result{
+text-align:center;
+font-size:28px;
+color:#ff4f8b;
+font-weight:bold;
+margin-top:20px;
+min-height:40px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h1>🌷 母亲节幸运抽奖 🌷</h1>
+<div class="subtitle">祝所有妈妈母亲节快乐 ❤️</div>
+
+<select id="className">
+<option value="">请选择班级</option>
+<option value="周二班">周二班</option>
+<option value="周六班">周六班</option>
+</select>
+
+<input id="studentName" placeholder="请输入学生姓名">
+
+<canvas id="wheel" width="420" height="420"></canvas>
+
+<button onclick="spinWheel()">🎡 开始抽奖</button>
+
+<div class="result" id="result">好运正在路上～</div>
+</div>
+
+<script>
+const prizes=[
+{name:"学币888",prob:2},
+{name:"学币666",prob:3},
+{name:"学币88",prob:10},
+{name:"学币66",prob:15},
+{name:"宠物积分5",prob:40},
+{name:"宠物积分10",prob:30}
+];
+
+const canvas=document.getElementById("wheel");
+const ctx=canvas.getContext("2d");
+
+let rotateAngle=0;
+let spinning=false;
+
+function drawWheel(){
+const arc=Math.PI*2/prizes.length;
+
+ctx.clearRect(0,0,420,420);
+
+for(let i=0;i<prizes.length;i++){
+
+ctx.beginPath();
+ctx.fillStyle=i%2===0?"#ff9fc1":"#ffd6e4";
+
+ctx.moveTo(210,210);
+ctx.arc(210,210,180,i*arc+rotateAngle,(i+1)*arc+rotateAngle);
+
+ctx.fill();
+
+ctx.save();
+ctx.translate(210,210);
+ctx.rotate(i*arc+arc/2+rotateAngle);
+
+ctx.fillStyle="#333";
+ctx.font="16px sans-serif";
+ctx.fillText(prizes[i].name,90,10);
+
+ctx.restore();
+}
+
+ctx.beginPath();
+ctx.fillStyle="#ff4f8b";
+ctx.arc(210,210,40,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle="white";
+ctx.font="bold 18px sans-serif";
+ctx.fillText("GO",194,217);
+
+ctx.beginPath();
+ctx.moveTo(210,10);
+ctx.lineTo(195,40);
+ctx.lineTo(225,40);
+ctx.fillStyle="#ff4f8b";
+ctx.fill();
+}
+
+drawWheel();
+
+function getPrize(){
+
+let total=0;
+
+for(let p of prizes){
+total+=p.prob;
+}
+
+let rand=Math.random()*total;
+
+let current=0;
+
+for(let p of prizes){
+current+=p.prob;
+
+if(rand<=current){
+return p.name;
+}
+}
+
+return prizes[0].name;
+}
+
+function spinWheel(){
+
+if(spinning)return;
+
+const className=document.getElementById("className").value;
+const name=document.getElementById("studentName").value.trim();
+
+if(!className||!name){
+alert("请选择班级并输入姓名");
+return;
+}
+
+const userKey=className+"-"+name;
+
+if(localStorage.getItem(userKey)){
+document.getElementById("result").innerText="该同学已经抽过奖啦";
+return;
+}
+
+spinning=true;
+
+const prize=getPrize();
+
+let current=0;
+const target=360*6+Math.random()*360;
+
+const timer=setInterval(()=>{
+
+current+=10;
+
+rotateAngle=current*Math.PI/180;
+
+drawWheel();
+
+if(current>=target){
+
+clearInterval(timer);
+
+localStorage.setItem(userKey,prize);
+
+const records=JSON.parse(localStorage.getItem("records")||"[]");
+
+records.unshift({
+className:className,
+name:name,
+prize:prize,
+time:new Date().toLocaleString()
+});
+
+localStorage.setItem("records",JSON.stringify(records));
+
+document.getElementById("result").innerText="🎁 恭喜 "+name+" 抽中："+prize;
+
+spinning=false;
+}
+
+},10);
+
+}
+</script>
+
+</body>
+</html>

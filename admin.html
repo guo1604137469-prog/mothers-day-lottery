@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>老师后台</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+body{
+font-family:"Microsoft YaHei",sans-serif;
+background:#fff7e6;
+padding:20px;
+}
+h1{
+color:#ff4f8b;
+}
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+button{
+padding:12px 20px;
+background:#ff5c96;
+border:none;
+color:white;
+border-radius:12px;
+cursor:pointer;
+margin-bottom:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>🏆 母亲节抽奖后台</h1>
+
+<button onclick="exportExcel()">📊 导出Excel</button>
+
+<table>
+<thead>
+<tr>
+<th>班级</th>
+<th>姓名</th>
+<th>奖品</th>
+<th>时间</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+
+<script>
+
+const records=JSON.parse(localStorage.getItem("records")||"[]");
+
+const tbody=document.getElementById("tbody");
+
+records.forEach(item=>{
+
+const tr=document.createElement("tr");
+
+tr.innerHTML=`
+<td>${item.className}</td>
+<td>${item.name}</td>
+<td>${item.prize}</td>
+<td>${item.time}</td>
+`;
+
+tbody.appendChild(tr);
+
+});
+
+function exportExcel(){
+
+const ws=XLSX.utils.json_to_sheet(records);
+
+const wb=XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(wb,ws,"中奖名单");
+
+XLSX.writeFile(wb,"母亲节中奖名单.xlsx");
+
+}
+
+</script>
+
+</body>
+</html>
