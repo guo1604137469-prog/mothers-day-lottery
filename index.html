@@ -14,7 +14,7 @@ body{
 }
 
 .card{
-    max-width:900px;
+    max-width:1000px;
     margin:auto;
     background:#fff;
     border-radius:30px;
@@ -27,6 +27,7 @@ h1{
     text-align:center;
     color:#ff4f8b;
     font-size:48px;
+    margin-bottom:10px;
 }
 
 .subtitle{
@@ -49,7 +50,7 @@ select,input{
 .canvas-wrap{
     display:flex;
     justify-content:center;
-    margin:30px 0;
+    margin:20px 0 40px;
 }
 
 canvas{
@@ -80,6 +81,32 @@ button:hover{
     color:#ff4f8b;
     font-weight:bold;
 }
+
+/* 手机适配 */
+@media(max-width:768px){
+
+    h1{
+        font-size:34px;
+    }
+
+    .subtitle{
+        font-size:18px;
+    }
+
+    select,input{
+        font-size:22px;
+        padding:16px;
+    }
+
+    button{
+        font-size:26px;
+        padding:18px;
+    }
+
+    .result{
+        font-size:24px;
+    }
+}
 </style>
 </head>
 
@@ -98,7 +125,7 @@ button:hover{
 <input type="text" id="studentName" placeholder="请输入学生姓名">
 
 <div class="canvas-wrap">
-    <canvas id="wheel" width="420" height="420"></canvas>
+    <canvas id="wheel" width="600" height="600"></canvas>
 </div>
 
 <button onclick="startLottery()">🎡 开始抽奖</button>
@@ -125,11 +152,11 @@ let spinning = false;
 
 function drawWheel(rotation = 0){
 
-    ctx.clearRect(0,0,420,420);
+    ctx.clearRect(0,0,600,600);
 
-    const centerX = 210;
-    const centerY = 210;
-    const radius = 170;
+    const centerX = 300;
+    const centerY = 300;
+    const radius = 250;
 
     const colors = ["#f49ac2","#f8d7e5"];
 
@@ -140,45 +167,47 @@ function drawWheel(rotation = 0){
         const start = rotation + i * arc;
         const end = start + arc;
 
+        // 扇形
         ctx.beginPath();
         ctx.moveTo(centerX,centerY);
         ctx.arc(centerX,centerY,radius,start,end);
         ctx.fillStyle = colors[i%2];
         ctx.fill();
 
+        // 文字
         ctx.save();
         ctx.translate(centerX,centerY);
         ctx.rotate(start + arc/2);
 
         ctx.fillStyle="#444";
-        ctx.font="bold 22px Microsoft YaHei";
+        ctx.font="bold 32px Microsoft YaHei";
         ctx.textAlign="center";
 
-        ctx.fillText(prizes[i],110,10);
+        ctx.fillText(prizes[i],165,10);
 
         ctx.restore();
     }
 
     // 白色箭头（先画）
     ctx.beginPath();
-    ctx.moveTo(210,145);
-    ctx.lineTo(192,180);
-    ctx.lineTo(228,180);
+    ctx.moveTo(300,205);
+    ctx.lineTo(275,250);
+    ctx.lineTo(325,250);
     ctx.closePath();
     ctx.fillStyle="white";
     ctx.fill();
 
-    // GO圆（后画，盖住箭头一点）
+    // GO圆（后画，覆盖箭头一点）
     ctx.beginPath();
-    ctx.arc(210,210,50,0,Math.PI*2);
+    ctx.arc(300,300,70,0,Math.PI*2);
     ctx.fillStyle="#ff4f8b";
     ctx.fill();
 
     // GO文字
     ctx.fillStyle="#fff";
-    ctx.font="bold 24px Microsoft YaHei";
+    ctx.font="bold 34px Microsoft YaHei";
     ctx.textAlign="center";
-    ctx.fillText("GO",210,220);
+    ctx.fillText("GO",300,312);
 }
 
 drawWheel();
@@ -197,7 +226,7 @@ function startLottery(){
 
     const key = className + "_" + studentName;
 
-    // 限制只能抽一次
+    // 每人只能抽一次
     if(localStorage.getItem(key)){
         alert("你已经抽过奖啦！");
         return;
