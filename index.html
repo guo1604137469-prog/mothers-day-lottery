@@ -4,226 +4,241 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>母亲节幸运抽奖</title>
+
 <style>
 body{
-margin:0;
-font-family:"Microsoft YaHei",sans-serif;
-background:linear-gradient(135deg,#ffe08f,#fff6d5);
-padding:20px;
+    margin:0;
+    font-family:"Microsoft YaHei",sans-serif;
+    background:linear-gradient(135deg,#ffe08f,#fff6d5);
+    padding:20px;
 }
+
 .card{
-max-width:900px;
-margin:auto;
-background:#fff;
-border-radius:30px;
-padding:30px;
-border:5px solid #ffb100;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    border-radius:30px;
+    padding:30px;
+    border:5px solid #ffb100;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
 }
+
 h1{
-text-align:center;
-color:#ff4f8b;
+    text-align:center;
+    color:#ff4f8b;
+    font-size:48px;
 }
+
 .subtitle{
-text-align:center;
-color:#666;
-margin-bottom:20px;
+    text-align:center;
+    color:#777;
+    font-size:24px;
+    margin-bottom:30px;
 }
-select,input,button{
-width:100%;
-padding:14px;
-margin-top:14px;
-border-radius:16px;
-border:2px solid #ffd0df;
-font-size:16px;
-box-sizing:border-box;
+
+select,input{
+    width:100%;
+    padding:20px;
+    border-radius:20px;
+    border:3px solid #ffc3d8;
+    font-size:28px;
+    margin-bottom:20px;
+    box-sizing:border-box;
 }
-button{
-background:#ff5c96;
-color:white;
-font-weight:bold;
-cursor:pointer;
-border:none;
+
+.canvas-wrap{
+    display:flex;
+    justify-content:center;
+    margin:30px 0;
 }
+
 canvas{
-display:block;
-margin:20px auto;
-max-width:100%;
+    max-width:100%;
 }
+
+button{
+    width:100%;
+    padding:22px;
+    border:none;
+    border-radius:25px;
+    background:#ff4f8b;
+    color:#fff;
+    font-size:34px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.02);
+}
+
 .result{
-text-align:center;
-font-size:28px;
-color:#ff4f8b;
-font-weight:bold;
-margin-top:20px;
-min-height:40px;
+    margin-top:25px;
+    text-align:center;
+    font-size:32px;
+    color:#ff4f8b;
+    font-weight:bold;
 }
 </style>
 </head>
+
 <body>
 
 <div class="card">
-<h1>🌷 母亲节幸运抽奖 🌷</h1>
-<div class="subtitle">祝所有妈妈母亲节快乐 ❤️</div>
+
+<h1>🌷 母亲节抽奖 🌷</h1>
+<div class="subtitle">像 Scratch 一样快乐编程 ❤️</div>
 
 <select id="className">
-<option value="">请选择班级</option>
-<option value="周二班">周二班</option>
-<option value="周六班">周六班</option>
+    <option>周二班</option>
+    <option>周六班</option>
 </select>
 
-<input id="studentName" placeholder="请输入学生姓名">
+<input type="text" id="studentName" placeholder="请输入学生姓名">
 
-<canvas id="wheel" width="420" height="420"></canvas>
+<div class="canvas-wrap">
+    <canvas id="wheel" width="420" height="420"></canvas>
+</div>
 
-<button onclick="spinWheel()">🎡 开始抽奖</button>
+<button onclick="startLottery()">🎡 开始抽奖</button>
 
-<div class="result" id="result">好运正在路上～</div>
+<div class="result" id="result"></div>
+
 </div>
 
 <script>
-const prizes=[
-{name:"学币888",prob:2},
-{name:"学币666",prob:3},
-{name:"学币88",prob:10},
-{name:"学币66",prob:15},
-{name:"宠物积分5",prob:40},
-{name:"宠物积分10",prob:30}
+const prizes = [
+    "学币888",
+    "学币666",
+    "学币88",
+    "学币66",
+    "宠物积分5",
+    "宠物积分10"
 ];
 
-const canvas=document.getElementById("wheel");
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
 
-let rotateAngle=0;
-let spinning=false;
+let angle = 0;
+let spinning = false;
 
-function drawWheel(){
-const arc=Math.PI*2/prizes.length;
+function drawWheel(rotation = 0){
 
-ctx.clearRect(0,0,420,420);
+    ctx.clearRect(0,0,420,420);
 
-for(let i=0;i<prizes.length;i++){
+    const centerX = 210;
+    const centerY = 210;
+    const radius = 170;
 
-ctx.beginPath();
-ctx.fillStyle=i%2===0?"#ff9fc1":"#ffd6e4";
+    const colors = ["#f49ac2","#f8d7e5"];
 
-ctx.moveTo(210,210);
-ctx.arc(210,210,180,i*arc+rotateAngle,(i+1)*arc+rotateAngle);
+    const arc = Math.PI * 2 / prizes.length;
 
-ctx.fill();
+    for(let i=0;i<prizes.length;i++){
 
-ctx.save();
-ctx.translate(210,210);
-ctx.rotate(i*arc+arc/2+rotateAngle);
+        const start = rotation + i * arc;
+        const end = start + arc;
 
-ctx.fillStyle="#333";
-ctx.font="16px sans-serif";
-ctx.fillText(prizes[i].name,90,10);
+        ctx.beginPath();
+        ctx.moveTo(centerX,centerY);
+        ctx.arc(centerX,centerY,radius,start,end);
+        ctx.fillStyle = colors[i%2];
+        ctx.fill();
 
-ctx.restore();
-}
+        ctx.save();
+        ctx.translate(centerX,centerY);
+        ctx.rotate(start + arc/2);
 
-ctx.beginPath();
-ctx.arc(210,210,50,0,Math.PI*2);
-ctx.fillStyle="#ff4f8b";
-ctx.fill();
+        ctx.fillStyle="#444";
+        ctx.font="bold 22px Microsoft YaHei";
+        ctx.textAlign="center";
 
-ctx.fillStyle="white";
-ctx.font="bold 18px sans-serif";
-ctx.fillText("GO",194,217);
+        ctx.fillText(prizes[i],110,10);
 
-ctx.beginPath();
-ctx.moveTo(210,160);
-ctx.lineTo(195,185);
-ctx.lineTo(225,185);
-ctx.closePath();
-ctx.fillStyle="white";
-ctx.fill();
+        ctx.restore();
+    }
+
+    // 白色箭头（先画）
+    ctx.beginPath();
+    ctx.moveTo(210,145);
+    ctx.lineTo(192,180);
+    ctx.lineTo(228,180);
+    ctx.closePath();
+    ctx.fillStyle="white";
+    ctx.fill();
+
+    // GO圆（后画，盖住箭头一点）
+    ctx.beginPath();
+    ctx.arc(210,210,50,0,Math.PI*2);
+    ctx.fillStyle="#ff4f8b";
+    ctx.fill();
+
+    // GO文字
+    ctx.fillStyle="#fff";
+    ctx.font="bold 24px Microsoft YaHei";
+    ctx.textAlign="center";
+    ctx.fillText("GO",210,220);
 }
 
 drawWheel();
 
-function getPrize(){
+function startLottery(){
 
-let total=0;
+    if(spinning) return;
 
-for(let p of prizes){
-total+=p.prob;
-}
+    const className = document.getElementById("className").value;
+    const studentName = document.getElementById("studentName").value.trim();
 
-let rand=Math.random()*total;
+    if(!studentName){
+        alert("请输入学生姓名");
+        return;
+    }
 
-let current=0;
+    const key = className + "_" + studentName;
 
-for(let p of prizes){
-current+=p.prob;
+    // 限制只能抽一次
+    if(localStorage.getItem(key)){
+        alert("你已经抽过奖啦！");
+        return;
+    }
 
-if(rand<=current){
-return p.name;
-}
-}
+    spinning = true;
 
-return prizes[0].name;
-}
+    const resultIndex = Math.floor(Math.random() * prizes.length);
 
-function spinWheel(){
+    const arc = 360 / prizes.length;
 
-if(spinning)return;
+    const target =
+        360 * 6 +
+        (360 - resultIndex * arc - arc/2);
 
-const className=document.getElementById("className").value;
-const name=document.getElementById("studentName").value.trim();
+    let current = angle;
 
-if(!className||!name){
-alert("请选择班级并输入姓名");
-return;
-}
+    const timer = setInterval(()=>{
 
-const userKey=className+"-"+name;
+        current += 12;
 
-if(localStorage.getItem(userKey)){
-document.getElementById("result").innerText="该同学已经抽过奖啦";
-return;
-}
+        angle = current;
 
-spinning=true;
+        drawWheel(current * Math.PI / 180);
 
-const prize=getPrize();
+        if(current >= target){
 
-let current=0;
-const target=360*6+Math.random()*360;
+            clearInterval(timer);
 
-const timer=setInterval(()=>{
+            spinning = false;
 
-current+=10;
+            const result = prizes[resultIndex];
 
-rotateAngle=current*Math.PI/180;
+            document.getElementById("result").innerHTML =
+                "🎉 恭喜获得：" + result;
 
-drawWheel();
+            // 记录抽奖
+            localStorage.setItem(key,result);
+        }
 
-if(current>=target){
-
-clearInterval(timer);
-
-localStorage.setItem(userKey,prize);
-
-const records=JSON.parse(localStorage.getItem("records")||"[]");
-
-records.unshift({
-className:className,
-name:name,
-prize:prize,
-time:new Date().toLocaleString()
-});
-
-localStorage.setItem("records",JSON.stringify(records));
-
-document.getElementById("result").innerText="🎁 恭喜 "+name+" 抽中："+prize;
-
-spinning=false;
-}
-
-},10);
-
+    },20);
 }
 </script>
 
