@@ -7,221 +7,186 @@
 <title>母亲节幸运抽奖</title>
 
 <style>
-
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-    background:linear-gradient(135deg,#ffe6f1,#fff5f8);
-    font-family:"Microsoft YaHei";
-    min-height:100vh;
-    overflow-x:hidden;
-    padding:20px;
+  min-height:100vh;
+  background:
+    linear-gradient(135deg,#ffe6f0,#ffd6eb);
+  font-family:
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
 }
 
 .container{
-    max-width:760px;
-    margin:auto;
-    background:white;
-    border-radius:35px;
-    padding:30px 20px 40px;
-    box-shadow:0 10px 35px rgba(0,0,0,0.08);
-    text-align:center;
+  width:100%;
+  max-width:720px;
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(12px);
+  border-radius:36px;
+  padding:30px 20px 40px;
+  box-shadow:0 15px 50px rgba(255,105,180,.18);
+  text-align:center;
 }
 
 .title{
-    font-size:42px;
-    color:#ff4f93;
-    font-weight:bold;
-    margin-bottom:10px;
+  font-size:38px;
+  font-weight:900;
+  color:#ff3f8e;
+  margin-bottom:8px;
 }
 
-.desc{
-    color:#999;
-    margin-bottom:25px;
-    font-size:18px;
+.sub{
+  color:#666;
+  margin-bottom:25px;
+  font-size:16px;
 }
 
-select,input{
-    width:100%;
-    padding:16px;
-    margin-bottom:18px;
-    border:none;
-    border-radius:18px;
-    background:#fff2f7;
-    font-size:18px;
-    outline:none;
+.form{
+  display:flex;
+  gap:12px;
+  margin-bottom:25px;
+}
+
+.form input,
+.form select{
+  flex:1;
+  height:52px;
+  border:none;
+  border-radius:16px;
+  padding:0 16px;
+  font-size:16px;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
 }
 
 .wheel-wrap{
-    position:relative;
-    width:620px;
-    height:620px;
-    margin:20px auto;
-}
-
-#wheel{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    transition:transform 5s cubic-bezier(.17,.67,.13,.99);
-    box-shadow:0 0 35px rgba(0,0,0,0.12);
+  position:relative;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:10px;
 }
 
 .pointer{
-    position:absolute;
-    top:228px;
-    left:50%;
-    transform:translateX(-50%);
-    width:0;
-    height:0;
-
-    border-left:24px solid transparent;
-    border-right:24px solid transparent;
-    border-bottom:42px solid white;
-
-    z-index:2;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-78%);
+  width:0;
+  height:0;
+  border-left:20px solid transparent;
+  border-right:20px solid transparent;
+  border-bottom:38px solid #fff;
+  z-index:2;
 }
 
 .center-circle{
-    position:absolute;
+  position:absolute;
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  background:#ff3f8e;
+  z-index:3;
 
-    left:50%;
-    top:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 
-    transform:translate(-50%,-50%);
+  color:#fff;
+  font-size:30px;
+  font-weight:900;
 
-    width:130px;
-    height:130px;
-
-    border-radius:50%;
-
-    background:#ff4f93;
-
-    z-index:3;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    color:white;
-    font-size:38px;
-    font-weight:bold;
-
-    box-shadow:0 5px 18px rgba(0,0,0,0.15);
+  box-shadow:
+    0 10px 25px rgba(255,62,142,.35);
 }
 
-button{
-    width:100%;
-    padding:24px;
-
-    border:none;
-    border-radius:24px;
-
-    background:#ff4f93;
-
-    color:white;
-
-    font-size:32px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:0.2s;
+canvas{
+  width:100%;
+  max-width:620px;
+  height:auto;
+  transition:transform 5s cubic-bezier(.17,.67,.2,1);
+  filter:
+    drop-shadow(0 18px 28px rgba(0,0,0,.12));
 }
 
-button:hover{
-    transform:scale(1.01);
+.btn{
+  margin-top:40px;
+  width:100%;
+  height:72px;
+  border:none;
+  border-radius:24px;
+  background:
+    linear-gradient(135deg,#ff4f9f,#ff2d7d);
+
+  color:#fff;
+  font-size:30px;
+  font-weight:900;
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 25px rgba(255,62,142,.3);
+
+  transition:.2s;
 }
 
-button:disabled{
-    opacity:0.6;
-}
-
-.result{
-    margin-top:25px;
-
-    font-size:34px;
-
-    color:#ff4f93;
-
-    font-weight:bold;
-
-    min-height:50px;
+.btn:active{
+  transform:scale(.97);
 }
 
 .tip{
-    margin-top:20px;
-
-    color:#666;
-
-    line-height:1.8;
-
-    font-size:17px;
-
-    background:#fff5fa;
-
-    padding:18px;
-
-    border-radius:18px;
+  margin-top:18px;
+  color:#888;
+  font-size:14px;
 }
 
-.flower{
-    position:fixed;
-
-    top:-20px;
-
-    font-size:22px;
-
-    animation:fall linear forwards;
-
-    pointer-events:none;
-
-    z-index:999;
-}
-
-@keyframes fall{
-
-    to{
-
-        transform:
-        translateY(110vh)
-        rotate(360deg);
-
-        opacity:0;
-    }
+.result{
+  margin-top:25px;
+  font-size:30px;
+  font-weight:900;
+  color:#ff2d7d;
+  min-height:40px;
 }
 
 @media(max-width:768px){
 
-    .wheel-wrap{
-        width:92vw;
-        height:92vw;
-    }
+  .title{
+    font-size:28px;
+  }
 
-    .pointer{
-        top:35%;
-    }
+  .form{
+    flex-direction:column;
+  }
 
-    .center-circle{
-        width:95px;
-        height:95px;
-        font-size:28px;
-    }
+  .btn{
+    height:64px;
+    font-size:24px;
+  }
 
-    .title{
-        font-size:30px;
-    }
+  .center-circle{
+    width:100px;
+    height:100px;
+    font-size:24px;
+  }
 
-    button{
-        font-size:26px;
-    }
-
+  .pointer{
+    transform:translate(-50%,-74%);
+    border-left:16px solid transparent;
+    border-right:16px solid transparent;
+    border-bottom:30px solid #fff;
+  }
 }
-
 </style>
 </head>
 
@@ -229,270 +194,225 @@ button:disabled{
 
 <div class="container">
 
-    <div class="title">
-        💐 母亲节幸运抽奖 💐
-    </div>
+  <div class="title">💖 母亲节幸运抽奖 💖</div>
 
-    <div class="desc">
-        每位同学仅可参与一次哦～
-    </div>
+  <div class="sub">
+    祝所有妈妈节日快乐～
+  </div>
 
+  <div class="form">
     <select id="className">
-        <option value="">请选择班级</option>
-        <option>周二班</option>
-        <option>周六班</option>
+      <option value="">请选择班级</option>
+      <option>周二班</option>
+      <option>周六班</option>
     </select>
 
     <input
-        type="text"
-        id="studentName"
-        placeholder="请输入姓名"
-    >
+      type="text"
+      id="studentName"
+      placeholder="请输入学生姓名"
+    />
+  </div>
 
-    <div class="wheel-wrap">
+  <div class="wheel-wrap">
 
-        <div class="pointer"></div>
+    <div class="pointer"></div>
 
-        <div class="center-circle">
-            GO
-        </div>
+    <canvas id="wheel" width="620" height="620"></canvas>
 
-        <canvas
-            id="wheel"
-            width="620"
-            height="620"
-        ></canvas>
-
+    <div class="center-circle">
+      GO
     </div>
 
-    <button id="spinBtn">
-        🎡 开始抽奖
-    </button>
+  </div>
 
-    <div class="result" id="result"></div>
+  <button class="btn" id="spinBtn">
+    🎡 开始抽奖
+  </button>
 
-    <div class="tip">
-        🎁 抽奖完成后请截图中奖页面<br>
-        并发送给老师领取奖励～
-    </div>
+  <div class="result" id="result"></div>
+
+  <div class="tip">
+    抽奖结果截图后发送给老师兑奖
+  </div>
 
 </div>
-
-<audio id="spinSound">
-<source
-src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"
-type="audio/mpeg">
-</audio>
 
 <script>
 
 const prizes = [
-    "学币888",
-    "学币666",
-    "学币88",
-    "学币66",
-    "宠物积分5",
-    "宠物积分10"
+  {
+    text:"学币888",
+    probability:2,
+    color:"#f8d1e1"
+  },
+  {
+    text:"二等奖：学币666",
+    probability:3,
+    color:"#f5a8c8"
+  },
+  {
+    text:"三等奖：学币88",
+    probability:15,
+    color:"#f8d1e1"
+  },
+  {
+    text:"四等奖：学币66",
+    probability:20,
+    color:"#f5a8c8"
+  },
+  {
+    text:"宠物积分5",
+    probability:35,
+    color:"#f8d1e1"
+  },
+  {
+    text:"宠物积分10",
+    probability:25,
+    color:"#f5a8c8"
+  }
 ];
 
-const colors = [
-    "#f8a8c8",
-    "#ffd8e5",
-    "#f59bc1",
-    "#ffe3ee",
-    "#f7aacb",
-    "#ffd4e4"
-];
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
 
-const canvas =
-document.getElementById("wheel");
+const btn = document.getElementById("spinBtn");
 
-const ctx =
-canvas.getContext("2d");
+const result = document.getElementById("result");
 
-const center = 310;
-const radius = 310;
+const total = prizes.length;
 
-function drawWheel(){
-
-    const arc =
-    Math.PI * 2 / prizes.length;
-
-    for(let i=0;i<prizes.length;i++){
-
-        const angle = i * arc;
-
-        ctx.beginPath();
-
-        ctx.moveTo(center,center);
-
-        ctx.arc(
-            center,
-            center,
-            radius,
-            angle,
-            angle + arc
-        );
-
-        ctx.fillStyle =
-        colors[i];
-
-        ctx.fill();
-
-        ctx.save();
-
-        ctx.translate(center,center);
-
-        ctx.rotate(angle + arc/2);
-
-        ctx.fillStyle="#333";
-
-        ctx.font =
-        "bold 26px Microsoft YaHei";
-
-        ctx.textAlign="center";
-
-        ctx.fillText(
-            prizes[i],
-            205,
-            10
-        );
-
-        ctx.restore();
-    }
-}
-
-drawWheel();
-
-const btn =
-document.getElementById("spinBtn");
-
-const wheel =
-document.getElementById("wheel");
-
-const result =
-document.getElementById("result");
-
-const spinSound =
-document.getElementById("spinSound");
+const arc = Math.PI * 2 / total;
 
 let rotating = false;
 
+drawWheel();
+
+
+// ===== 绘制转盘 =====
+function drawWheel(){
+
+  const radius = canvas.width / 2;
+
+  for(let i=0;i<total;i++){
+
+    const angle = i * arc - Math.PI / 2 - arc / 2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(radius,radius);
+
+    ctx.arc(
+      radius,
+      radius,
+      radius,
+      angle,
+      angle + arc
+    );
+
+    ctx.fillStyle = prizes[i].color;
+
+    ctx.fill();
+
+    ctx.save();
+
+    ctx.translate(radius,radius);
+
+    ctx.rotate(angle + arc/2);
+
+    ctx.fillStyle="#222";
+
+    ctx.font="bold 26px Microsoft YaHei";
+
+    ctx.textAlign="center";
+
+    ctx.fillText(
+      prizes[i].text,
+      radius*0.68,
+      10
+    );
+
+    ctx.restore();
+  }
+}
+
+
+
+// ===== 按概率抽奖 =====
+function getRandomPrizeIndex(){
+
+  const random = Math.random() * 100;
+
+  let sum = 0;
+
+  for(let i=0;i<prizes.length;i++){
+
+    sum += prizes[i].probability;
+
+    if(random <= sum){
+      return i;
+    }
+  }
+
+  return prizes.length - 1;
+}
+
+
+
+// ===== 开始抽奖 =====
 btn.onclick = ()=>{
 
-    if(rotating) return;
+  if(rotating) return;
 
-    const className =
+  const className =
     document.getElementById("className").value;
 
-    const studentName =
+  const studentName =
     document.getElementById("studentName").value.trim();
 
-    if(!className){
+  if(!className){
+    alert("请选择班级");
+    return;
+  }
 
-        alert("请选择班级");
+  if(!studentName){
+    alert("请输入学生姓名");
+    return;
+  }
 
-        return;
-    }
+  rotating = true;
 
-    if(!studentName){
+  result.innerHTML = "";
 
-        alert("请输入姓名");
+  const prizeIndex = getRandomPrizeIndex();
 
-        return;
-    }
+  const prize = prizes[prizeIndex];
 
-    // 限制一次
-    const userKey =
-    className + "_" + studentName;
+  // 每块角度
+  const perDeg = 360 / total;
 
-    if(localStorage.getItem(userKey)){
+  // 指针在正上方
+  // 目标：让中奖块中心转到正上方
+  const targetDeg =
+    360 - (prizeIndex * perDeg + perDeg / 2);
 
-        alert("您已经参与过抽奖啦～");
+  // 多转几圈
+  const finalDeg =
+    360 * 6 + targetDeg;
 
-        return;
-    }
+  canvas.style.transform =
+    `rotate(${finalDeg}deg)`;
 
-    rotating = true;
+  setTimeout(()=>{
 
-    btn.disabled = true;
+    result.innerHTML =
+      `🎉 恭喜获得：${prize.text}`;
 
-    spinSound.currentTime = 0;
+    rotating = false;
 
-    spinSound.play();
+  },5200);
 
-    const prizeIndex =
-    Math.floor(Math.random() * prizes.length);
-
-    const prize =
-    prizes[prizeIndex];
-
-    const eachDeg =
-    360 / prizes.length;
-
-    // 完全对齐版本
-    const rotateDeg =
-        360 * 6 +
-        (
-            270 -
-            prizeIndex * eachDeg -
-            eachDeg / 2
-        );
-
-    wheel.style.transform =
-    `rotate(${rotateDeg}deg)`;
-
-    setTimeout(()=>{
-
-        result.innerHTML =
-        `🎉 恭喜获得：<br>${prize}`;
-
-        localStorage.setItem(
-            userKey,
-            "1"
-        );
-
-        startFlowers();
-
-        rotating = false;
-
-        btn.disabled = false;
-
-    },5200);
 };
-
-function startFlowers(){
-
-    for(let i=0;i<35;i++){
-
-        setTimeout(()=>{
-
-            const flower =
-            document.createElement("div");
-
-            flower.className =
-            "flower";
-
-            flower.innerHTML =
-            ["🌸","💖","🌺","✨"][Math.floor(Math.random()*4)];
-
-            flower.style.left =
-            Math.random()*100 + "vw";
-
-            flower.style.animationDuration =
-            (3 + Math.random()*3) + "s";
-
-            document.body.appendChild(flower);
-
-            setTimeout(()=>{
-
-                flower.remove();
-
-            },6000);
-
-        },i * 120);
-    }
-}
 
 </script>
 
