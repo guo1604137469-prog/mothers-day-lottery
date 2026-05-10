@@ -354,7 +354,9 @@ btn.onclick = async ()=>{
 
             }else{
 
-                alert("记录失败");
+                alert(
+        result.message || "记录失败"
+    );
             }
 
         }catch(error){
