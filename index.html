@@ -318,7 +318,7 @@ function drawWheel(){
         ctx.fillStyle="#333";
 
         ctx.font =
-        "bold 28px Microsoft YaHei";
+        "bold 26px Microsoft YaHei";
 
         ctx.textAlign="center";
 
@@ -400,11 +400,15 @@ btn.onclick = ()=>{
     const eachDeg =
     360 / prizes.length;
 
+    // 修复奖品和箭头对齐
     const rotateDeg =
         360 * 6 +
-        (360 -
-        prizeIndex * eachDeg -
-        eachDeg / 2);
+        (
+            360 -
+            prizeIndex * eachDeg -
+            eachDeg / 2 -
+            30
+        );
 
     wheel.style.transform =
     `rotate(${rotateDeg}deg)`;
