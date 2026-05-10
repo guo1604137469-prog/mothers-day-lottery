@@ -78,21 +78,29 @@ select,input{
     transform:translateX(-50%);
     width:0;
     height:0;
+
     border-left:24px solid transparent;
     border-right:24px solid transparent;
     border-bottom:42px solid white;
+
     z-index:2;
 }
 
 .center-circle{
     position:absolute;
+
     left:50%;
     top:50%;
+
     transform:translate(-50%,-50%);
+
     width:130px;
     height:130px;
+
     border-radius:50%;
+
     background:#ff4f93;
+
     z-index:3;
 
     display:flex;
@@ -109,13 +117,19 @@ select,input{
 button{
     width:100%;
     padding:24px;
+
     border:none;
     border-radius:24px;
+
     background:#ff4f93;
+
     color:white;
+
     font-size:32px;
     font-weight:bold;
+
     cursor:pointer;
+
     transition:0.2s;
 }
 
@@ -129,34 +143,50 @@ button:disabled{
 
 .result{
     margin-top:25px;
+
     font-size:34px;
+
     color:#ff4f93;
+
     font-weight:bold;
+
     min-height:50px;
 }
 
 .tip{
     margin-top:20px;
+
     color:#666;
+
     line-height:1.8;
+
     font-size:17px;
+
     background:#fff5fa;
+
     padding:18px;
+
     border-radius:18px;
 }
 
 .flower{
     position:fixed;
+
     top:-20px;
+
     font-size:22px;
+
     animation:fall linear forwards;
+
     pointer-events:none;
+
     z-index:999;
 }
 
 @keyframes fall{
 
     to{
+
         transform:
         translateY(110vh)
         rotate(360deg);
@@ -257,10 +287,10 @@ type="audio/mpeg">
 <script>
 
 const prizes = [
-    "一等奖：学币888",
-    "二等奖：学币666",
-    "三等奖：学币88",
-    "四等奖：学币66",
+    "学币888",
+    "学币666",
+    "学币88",
+    "学币66",
     "宠物积分5",
     "宠物积分10"
 ];
@@ -372,7 +402,7 @@ btn.onclick = ()=>{
         return;
     }
 
-    // 本地限制一次
+    // 限制一次
     const userKey =
     className + "_" + studentName;
 
@@ -400,14 +430,13 @@ btn.onclick = ()=>{
     const eachDeg =
     360 / prizes.length;
 
-    // 修复奖品和箭头对齐
+    // 完全对齐版本
     const rotateDeg =
         360 * 6 +
         (
-            360 -
+            270 -
             prizeIndex * eachDeg -
-            eachDeg / 2 -
-            30
+            eachDeg / 2
         );
 
     wheel.style.transform =
