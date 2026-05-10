@@ -4,85 +4,110 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>老师后台</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <style>
+
 body{
-font-family:"Microsoft YaHei",sans-serif;
+font-family:"Microsoft YaHei";
 background:#fff7e6;
 padding:20px;
 }
+
 h1{
 color:#ff4f8b;
 }
+
 table{
 width:100%;
 border-collapse:collapse;
 background:white;
 }
+
 th,td{
 border:1px solid #ddd;
-padding:10px;
+padding:12px;
 text-align:center;
 }
+
 button{
-padding:12px 20px;
-background:#ff5c96;
+padding:14px 24px;
+background:#ff4f8b;
 border:none;
 color:white;
 border-radius:12px;
+font-size:18px;
 cursor:pointer;
 margin-bottom:20px;
 }
+
 </style>
 </head>
+
 <body>
 
-<h1>🏆 母亲节抽奖后台</h1>
+<h1>🎁 母亲节抽奖后台</h1>
 
-<button onclick="exportExcel()">📊 导出Excel</button>
+<button onclick="exportExcel()">导出Excel</button>
 
-<table>
+<table id="table">
+
 <thead>
 <tr>
-<th>班级</th>
-<th>姓名</th>
-<th>奖品</th>
 <th>时间</th>
+<th>班级</th>
+<th>学生</th>
+<th>奖品</th>
 </tr>
 </thead>
-<tbody id="tbody"></tbody>
+
+<tbody></tbody>
+
 </table>
 
 <script>
 
-const records=JSON.parse(localStorage.getItem("records")||"[]");
+const SHEET_ID="16FeEq7mCR4GE-aliYN8iGSJM0-iyEkiJiMCppU5q-mM";
 
-const tbody=document.getElementById("tbody");
+async function loadData(){
 
-records.forEach(item=>{
+const url=`https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
 
-const tr=document.createElement("tr");
+const res=await fetch(url);
 
-tr.innerHTML=`
-<td>${item.className}</td>
-<td>${item.name}</td>
-<td>${item.prize}</td>
-<td>${item.time}</td>
+const data=await res.json();
+
+const tbody=document.querySelector("tbody");
+
+tbody.innerHTML="";
+
+data.reverse().forEach(item=>{
+
+tbody.innerHTML+=`
+<tr>
+<td>${item.Timestamp||""}</td>
+<td>${item.className||""}</td>
+<td>${item.studentName||""}</td>
+<td>${item.prize||""}</td>
+</tr>
 `;
-
-tbody.appendChild(tr);
 
 });
 
+}
+
+loadData();
+
+setInterval(loadData,5000);
+
 function exportExcel(){
 
-const ws=XLSX.utils.json_to_sheet(records);
+const table=document.getElementById("table");
 
-const wb=XLSX.utils.book_new();
+const wb=XLSX.utils.table_to_book(table,{sheet:"抽奖记录"});
 
-XLSX.utils.book_append_sheet(wb,ws,"中奖名单");
-
-XLSX.writeFile(wb,"母亲节中奖名单.xlsx");
+XLSX.writeFile(wb,"抽奖记录.xlsx");
 
 }
 
