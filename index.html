@@ -201,9 +201,7 @@ button:hover{
   <select id="className">
     <option value="">请选择班级</option>
     <option>周二班</option>
-    <option>周三班</option>
-    <option>周四班</option>
-    <option>周五班</option>
+    <option>周六班</option>
   </select>
 
   <input
@@ -219,27 +217,27 @@ button:hover{
     <div id="wheel">
 
       <div class="label" style="transform:translate(-50%,-50%) rotate(30deg) translateY(-250px) rotate(-30deg)">
-        宠物积分5
-      </div>
-
-      <div class="label" style="transform:translate(-50%,-50%) rotate(90deg) translateY(-250px) rotate(-90deg)">
-        宠物积分10
-      </div>
-
-      <div class="label" style="transform:translate(-50%,-50%) rotate(150deg) translateY(-250px) rotate(-150deg)">
         学币888
       </div>
 
-      <div class="label" style="transform:translate(-50%,-50%) rotate(210deg) translateY(-250px) rotate(-210deg)">
+      <div class="label" style="transform:translate(-50%,-50%) rotate(90deg) translateY(-250px) rotate(-90deg)">
         学币666
       </div>
 
-      <div class="label" style="transform:translate(-50%,-50%) rotate(270deg) translateY(-250px) rotate(-270deg)">
+      <div class="label" style="transform:translate(-50%,-50%) rotate(150deg) translateY(-250px) rotate(-150deg)">
         学币88
       </div>
 
+      <div class="label" style="transform:translate(-50%,-50%) rotate(210deg) translateY(-250px) rotate(-210deg)">
+        学币66
+      </div>
+
+      <div class="label" style="transform:translate(-50%,-50%) rotate(270deg) translateY(-250px) rotate(-270deg)">
+        宠物积分5
+      </div>
+
       <div class="label" style="transform:translate(-50%,-50%) rotate(330deg) translateY(-250px) rotate(-330deg)">
-        学币99
+        宠物积分10
       </div>
 
       <div class="center">
@@ -260,24 +258,30 @@ button:hover{
 
 <script>
 
+const API_URL =
+"https://script.google.com/macros/s/AKfycbyiwPBt1bYH-QCRLXnBgYoIOeajdlK8fKCiTkc-5-0OMgg3dHbZLBZgklaEdyvWj20g/exec";
+
 const prizes = [
-  "宠物积分5",
-  "宠物积分10",
   "学币888",
   "学币666",
   "学币88",
-  "学币99"
+  "学币66",
+  "宠物积分5",
+  "宠物积分10"
 ];
 
 let rotating = false;
 let currentRotate = 0;
 
-function startLottery(){
+async function startLottery(){
 
   if(rotating) return;
 
-  const className = document.getElementById("className").value;
-  const parentName = document.getElementById("parentName").value;
+  const className =
+    document.getElementById("className").value;
+
+  const parentName =
+    document.getElementById("parentName").value.trim();
 
   if(!className){
     alert("请选择班级");
@@ -291,52 +295,81 @@ function startLottery(){
 
   rotating = true;
 
-  const index = Math.floor(Math.random()*prizes.length);
+  try{
 
-  const prize = prizes[index];
+    // 查询是否已抽奖
+    const checkRes =
+      await fetch(API_URL + "?check=1");
 
-  const deg = 360 / prizes.length;
+    const list =
+      await checkRes.json();
 
-  const finalDeg =
-    360 * 6 +
-    (360 - index * deg - deg / 2);
+    const existed = list.find(item =>
 
-  currentRotate += finalDeg;
+      item.className === className &&
+      item.parentName === parentName
 
-  const wheel = document.getElementById("wheel");
+    );
 
-  wheel.style.transform = `rotate(${currentRotate}deg)`;
+    if(existed){
 
-  setTimeout(()=>{
+      alert("您已经抽过奖啦～");
 
-    document.getElementById("result").innerHTML =
-      `🎉 恭喜获得：${prize}`;
+      rotating = false;
 
-    uploadData(className,parentName,prize);
+      return;
+    }
+
+    // 随机奖品
+    const index =
+      Math.floor(Math.random() * prizes.length);
+
+    const prize = prizes[index];
+
+    const deg = 360 / prizes.length;
+
+    const targetDeg = index * deg;
+
+    const finalDeg =
+      360 * 6 +
+      (360 - targetDeg - deg / 2);
+
+    currentRotate += finalDeg;
+
+    const wheel =
+      document.getElementById("wheel");
+
+    wheel.style.transform =
+      `rotate(${currentRotate}deg)`;
+
+    setTimeout(async ()=>{
+
+      document.getElementById("result").innerHTML =
+        `🎉 恭喜获得：${prize}`;
+
+      // 上传中奖数据
+      await fetch(API_URL,{
+        method:"POST",
+        body:JSON.stringify({
+          className:className,
+          parentName:parentName,
+          prize:prize
+        })
+      });
+
+      rotating = false;
+
+    },5200);
+
+  }catch(err){
+
+    console.error(err);
+
+    alert("网络异常，请稍后重试");
 
     rotating = false;
 
-  },5200);
-
-}
-
-function uploadData(className,parentName,prize){
-
-  fetch("https://script.google.com/macros/s/AKfycbyiwPBt1bYH-QCRLXnBgYoIOeajdlK8fKCiTkc-5-0OMgg3dHbZLBZgklaEdyvWj20g/exec",{
-    method:"POST",
-    body:JSON.stringify({
-      className:className,
-      parentName:parentName,
-      prize:prize
-    })
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    console.log("上传成功",data);
-  })
-  .catch(err=>{
-    console.error("上传失败",err);
-  });
+  }
 
 }
 
